@@ -15,6 +15,22 @@ public class WorkHours {
 
     public String minWork(String s) {
         Path path = Path.of(s);
+        readFromFile(path);
+        WorkDays min = workDays.get(0);
+        min = minDay(min);
+        return min.getName() + ": " + min.getDate();
+    }
+
+    private WorkDays minDay(WorkDays min) {
+        for (WorkDays wd : workDays) {
+            if (wd.getHours() < min.getHours()) {
+                min = wd;
+            }
+        }
+        return min;
+    }
+
+    private void readFromFile(Path path) {
         try (BufferedReader reader = Files.newBufferedReader(path)) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -24,17 +40,5 @@ public class WorkHours {
         } catch (IOException ioe) {
             throw new IllegalStateException("Cannot open file", ioe);
         }
-        String name = workDays.get(0).getName();
-        int hours = workDays.get(0).getHours();
-        String date = workDays.get(0).getDate();
-        for (int i = 1; i < workDays.size(); i++) {
-            if (workDays.get(i).getHours() < hours) {
-                hours = workDays.get(i).getHours();
-                name = workDays.get(i).getName();
-                date = workDays.get(i).getDate();
-
-            }
-        }
-    return name+": "+date;
     }
 }
